@@ -1,5 +1,4 @@
 import React from 'react';
-import CardPlaceholder from '../components/CardPlaceholder';
 import DrawCardContainer from './DrawCardContainer';
 import AceCardContainer from './AceCardContainer';
 import CardPlayContainer from './CardPlayContainer';
@@ -44,7 +43,6 @@ class SolitaireContainer extends React.Component {
 
     componentDidMount() {
         const url = "https://deckofcardsapi.com/api/deck/new/draw/?count=52"
-        let allCards = []
 
         fetch(url)
             .then(res => res.json())
@@ -55,7 +53,6 @@ class SolitaireContainer extends React.Component {
     render() {
         return (
             <div className="game-container">
-                {/* {this.state.allCards.length > 0 ? <img src={this.state.allCards[0].image}></img> : null} */}
                 <div className="top-bar">
                     <DrawCardContainer cards={this.state.cards.drawPile}></DrawCardContainer>
                     <AceCardContainer cards={this.state.cards.ace}></AceCardContainer>
