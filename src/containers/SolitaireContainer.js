@@ -1,4 +1,8 @@
 import React from 'react';
+import CardPlaceholder from '../components/CardPlaceholder';
+import DrawCardContainer from './DrawCardContainer';
+import AceCardContainer from './AceCardContainer';
+import CardPlayContainer from './CardPlayContainer';
 
 class SolitaireContainer extends React.Component {
     constructor(props) {
@@ -11,7 +15,7 @@ class SolitaireContainer extends React.Component {
                     drawn: []
                 },
                 inPlay: {
-                    1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [],
+                    0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []
                 },
                 ace: {
                     "HEARTS": [], "DIAMONDS": [], "SPADES": [], "CLUBS": []
@@ -19,10 +23,28 @@ class SolitaireContainer extends React.Component {
             }
 
         }
+        this.dealCards = this.dealCards.bind(this)
+    }
+
+    dealCards() {
+        let newAllCards = this.state.allCards
+        let newCards = this.state.cards
+
+        for(let i=0; i < 7; i++){
+            const numOfCardsToDeal = i + 1;
+            let counter = 0;
+            while(counter < numOfCardsToDeal){
+                newCards.inPlay[`${i}`].push(newAllCards.pop())
+                counter++
+            }
+        }
+        newCards.drawPile.toDraw = newAllCards
+        this.setState({cards: newCards})
     }
 
     componentDidMount() {
         const url = "https://deckofcardsapi.com/api/deck/new/draw/?count=52"
+        let allCards = []
 
         fetch(url)
             .then(res => res.json())
@@ -32,7 +54,15 @@ class SolitaireContainer extends React.Component {
 
     render() {
         return (
-            <div>{this.state.allCards.length > 0 ? <img src={this.state.allCards[0].image}></img> : null}</div>
+            <div className="game-container">
+                {/* {this.state.allCards.length > 0 ? <img src={this.state.allCards[0].image}></img> : null} */}
+                <div className="top-bar">
+                    <DrawCardContainer cards={this.state.cards.drawPile}></DrawCardContainer>
+                    <AceCardContainer cards={this.state.cards.ace}></AceCardContainer>
+                </div>
+                <CardPlayContainer cards={this.state.cards.inPlay}></CardPlayContainer>
+                <button onClick={this.dealCards}>Start Game</button>
+            </div>
         )
     }
 }

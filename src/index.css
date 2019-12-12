@@ -11,3 +11,33 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.card-placeholder {
+  border: 1px solid black;
+  height: 138px;
+  width: 100px;
+  margin: 10px;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+}
+
+.top-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.game-container {
+  width: 1000px;
+}
+
+.play-container {
+  margin-top: 50px;
+}
+
+img {
+  width: 100px;
+}
