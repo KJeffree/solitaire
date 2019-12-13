@@ -29,6 +29,12 @@ class SolitaireContainer extends React.Component {
         let newAllCards = this.state.allCards
         let newCards = this.state.cards
 
+        // console.log(newAllCards[0])
+
+        for (let card of newAllCards){
+            card["hidden"] = true
+        }
+
         for(let i=0; i < 7; i++){
             const numOfCardsToDeal = i + 1;
             let counter = 0;
@@ -36,6 +42,7 @@ class SolitaireContainer extends React.Component {
                 newCards.inPlay[`${i}`].push(newAllCards.pop())
                 counter++
             }
+            newCards.inPlay[`${i}`][newCards.inPlay[`${i}`].length - 1].hidden = false
         }
         newCards.drawPile.toDraw = newAllCards
         this.setState({cards: newCards})
