@@ -7,7 +7,7 @@ const CardPlaceholder = (props) => {
         props.onCardClick(props.position)
     } 
     
-    if (props.cards.length == 0){
+    if (props.cards.length === 0){
         return (
             <div className="card-placeholder" onClick={handleClick}>
             </div>
@@ -26,12 +26,12 @@ const CardPlaceholder = (props) => {
         cardNodes = <img src={props.cards[props.cards.length - 1].image} alt={`${props.cards[props.cards.length - 1].value} ${props.cards[props.cards.length - 1].suit}`} onClick={handleClick}></img>
     }
     else {
-        cardNodes = <img src="cardback.png" alt={`${props.cards[0].value} ${props.cards[0].suit}`} ></img>
+        cardNodes = <img src="cardback.png" alt={`${props.cards[0].value} ${props.cards[0].suit}`} onClick={handleClick} ></img>
     }
     
 
     return (
-        <div className="card-placeholder" onClick={handleClick}>
+        <div className="card-placeholder" >
             {cardNodes}
         </div>
     )

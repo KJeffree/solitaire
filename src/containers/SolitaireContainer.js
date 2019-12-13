@@ -25,17 +25,28 @@ class SolitaireContainer extends React.Component {
         this.dealCards = this.dealCards.bind(this)
         this.drawCard = this.drawCard.bind(this)
         this.handleCardClick = this.handleCardClick.bind(this)
+        this.playCardFromDrawPile = this.playCardFromDrawPile.bind(this)
     }
 
     handleCardClick(position) {
-        if (position == "drawPile"){
+        if (position === "drawPile"){
             this.drawCard()  
+        } else if (position === "drawn"){
+            this.playCardFromDrawPile()
+        } else if (position === "inPlay"){
+
+        } else {
+
         }
+    }
+
+    playCardFromDrawPile(){
+        
     }
 
     drawCard() {
         let newCards = this.state.cards
-        if (newCards.drawPile.toDraw.length == 0){
+        if (newCards.drawPile.toDraw.length === 0){
             newCards.drawPile.toDraw = newCards.drawPile.drawn
             newCards.drawPile.drawn = []
         } else {
@@ -50,6 +61,15 @@ class SolitaireContainer extends React.Component {
 
         for (let card of newAllCards){
             card["hidden"] = true
+            if (card.value === "JACK"){
+                card.value = "11"
+            } else if (card.value === "QUEEN"){
+                card.value = "12"
+            } else if (card.value === "KING"){
+                card.value = "13"
+            } else if (card.value === "ACE"){
+                card.value = "1"
+            }
         }
 
         for(let i=0; i < 7; i++){
