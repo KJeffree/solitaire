@@ -23,6 +23,18 @@ class SolitaireContainer extends React.Component {
 
         }
         this.dealCards = this.dealCards.bind(this)
+        this.drawCard = this.drawCard.bind(this)
+        this.handleCardClick = this.handleCardClick.bind(this)
+    }
+
+    handleCardClick(position) {
+            this.drawCard()
+    }
+
+    drawCard() {
+        let newCards = this.state.cards
+        newCards.drawPile.drawn.push(newCards.drawPile.toDraw.pop())
+        this.setState({cards: newCards})
     }
 
     dealCards() {
@@ -61,10 +73,10 @@ class SolitaireContainer extends React.Component {
         return (
             <div className="game-container">
                 <div className="top-bar">
-                    <DrawCardContainer cards={this.state.cards.drawPile}></DrawCardContainer>
-                    <AceCardContainer cards={this.state.cards.ace}></AceCardContainer>
+                    <DrawCardContainer cards={this.state.cards.drawPile} onCardClick={this.handleCardClick}></DrawCardContainer>
+                    <AceCardContainer cards={this.state.cards.ace} onCardClick={this.handleCardClick}></AceCardContainer>
                 </div>
-                <CardPlayContainer cards={this.state.cards.inPlay}></CardPlayContainer>
+                <CardPlayContainer cards={this.state.cards.inPlay} onCardClick={this.handleCardClick}></CardPlayContainer>
                 <button onClick={this.dealCards}>Start Game</button>
             </div>
         )
