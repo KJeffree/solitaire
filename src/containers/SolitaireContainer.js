@@ -28,20 +28,25 @@ class SolitaireContainer extends React.Component {
     }
 
     handleCardClick(position) {
-            this.drawCard()
+        if (position == "drawPile"){
+            this.drawCard()  
+        }
     }
 
     drawCard() {
         let newCards = this.state.cards
-        newCards.drawPile.drawn.push(newCards.drawPile.toDraw.pop())
+        if (newCards.drawPile.toDraw.length == 0){
+            newCards.drawPile.toDraw = newCards.drawPile.drawn
+            newCards.drawPile.drawn = []
+        } else {
+            newCards.drawPile.drawn.push(newCards.drawPile.toDraw.pop())
+        }
         this.setState({cards: newCards})
     }
 
     dealCards() {
         let newAllCards = this.state.allCards
         let newCards = this.state.cards
-
-        // console.log(newAllCards[0])
 
         for (let card of newAllCards){
             card["hidden"] = true

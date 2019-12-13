@@ -3,13 +3,13 @@ import React from 'react';
 const CardPlaceholder = (props) => {
     let cardNodes = null;
 
-    function handleClick(event) {
-        props.onCardClick(event)
+    function handleClick() {
+        props.onCardClick(props.position)
     } 
     
     if (props.cards.length == 0){
         return (
-            <div className="card-placeholder">
+            <div className="card-placeholder" onClick={handleClick}>
             </div>
         )
     }
@@ -26,12 +26,12 @@ const CardPlaceholder = (props) => {
         cardNodes = <img src={props.cards[props.cards.length - 1].image} alt={`${props.cards[props.cards.length - 1].value} ${props.cards[props.cards.length - 1].suit}`} onClick={handleClick}></img>
     }
     else {
-        cardNodes = <img src="cardback.png" alt={`${props.cards[0].value} ${props.cards[0].suit}`} onClick={handleClick}></img>
+        cardNodes = <img src="cardback.png" alt={`${props.cards[0].value} ${props.cards[0].suit}`} ></img>
     }
     
 
     return (
-        <div className="card-placeholder">
+        <div className="card-placeholder" onClick={handleClick}>
             {cardNodes}
         </div>
     )
