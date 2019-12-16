@@ -29,13 +29,13 @@ class SolitaireContainer extends React.Component {
         this.selectCardFromDrawPile = this.selectCardFromDrawPile.bind(this)
     }
 
-    handleCardClick(position) {
+    handleCardClick(position, columnNumber = null) {
         if (position === "drawPile"){
             this.drawCard()  
         } else if (position === "drawn"){
             this.selectCardFromDrawPile()
         } else if (position === "inPlay"){
-
+            this.selectCardFromInPlay(columnNumber)
         } else {
 
         }
@@ -45,19 +45,44 @@ class SolitaireContainer extends React.Component {
         let newAllCards = this.state.cards
         const selectedCard = newAllCards.drawPile.drawn[newAllCards.drawPile.drawn.length - 1]
         if (selectedCard === this.state.selectedCard){
-            console.log(true);
             this.setState({selectedCard: null})
             newAllCards.drawPile.drawn[newAllCards.drawPile.drawn.length - 1].hilighted = false
-            this.setState({ cards: newAllCards})
         } else {
-            console.log(false);
             newAllCards.drawPile.drawn[newAllCards.drawPile.drawn.length - 1].hilighted = true
             this.setState({ selectedCard: this.state.cards.drawPile.drawn[this.state.cards.drawPile.drawn.length - 1]})
         }
+        this.setState({cards: newAllCards})
     }
 
-    selectCardFromInPlay(){
-        // this.setState({ selectedCard: this.state.cards.inPlay[this.state.cards.inPlay.length - 1]})
+    selectCardFromInPlay(columnNumber){
+        let newCards = this.state.cards
+        let clickedCard = this.state.cards.inPlay[columnNumber][this.state.cards.inPlay[columnNumber].length - 1]
+        //if selected card DONE
+            // if clicked card is one higher than selected card AND opposite colour DONE
+                //place card in that array DONE
+            // else if selected card is same as clicked card
+                //deselect card
+            // else
+                //do nothing
+        // else
+            //select card
+        if (this.state.selectedCard) {
+            if (this.state.selectedCard === this.state.cards.inPlay[columnNumber][this.state.cards.inPlay[columnNumber].length - 1]){
+                this.setState({selectedCard: null})
+                newCards.inPlay[columnNumber][newCards.inPlay[columnNumber].length - 1].hilighted = false
+            } else if (this.state.selectedCard.value == clickedCard.value - 1 && this.state.selectedCard.colour != clickedCard.colour){
+                newCards.inPlay[columnNumber].push(this.state.selectedCard)
+                newCards.inPlay[columnNumber][newCards.inPlay[columnNumber].length - 1].hidden = false
+                newCards.inPlay[columnNumber][newCards.inPlay[columnNumber].length - 1].hilighted = false
+
+                newCards.drawPile.drawn.pop()
+                this.setState({selectedCard: null})
+            }
+        } else {
+            newCards.inPlay[columnNumber][newCards.inPlay[columnNumber].length - 1].hilighted = true
+            this.setState({selectedCard: newCards.inPlay[columnNumber][newCards.inPlay[columnNumber].length - 1]})
+        }
+        this.setState({cards: newCards})
     }
 
     drawCard() {
@@ -78,6 +103,11 @@ class SolitaireContainer extends React.Component {
         for (let card of newAllCards){
             card["hidden"] = true
             card["hilighted"] = false
+            if(card.suit === "HEARTS" || card.suit === "DIAMONDS"){
+                card["colour"] = "Red"
+            } else {
+                card["colour"] = "Black"
+            }
             if (card.value === "JACK"){
                 card.value = "11"
             } else if (card.value === "QUEEN"){

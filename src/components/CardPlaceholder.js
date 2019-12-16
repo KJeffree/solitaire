@@ -4,8 +4,11 @@ const CardPlaceholder = (props) => {
     let cardNodes = null;
 
     function handleClick(event) {
-        console.log(event.target)
-        props.onCardClick(props.position, event.target.card)
+        if (props.column){
+            props.onCardClick(props.position, props.column)
+        } else {
+            props.onCardClick(props.position)
+        }
     } 
     
     if (props.cards.length === 0){
