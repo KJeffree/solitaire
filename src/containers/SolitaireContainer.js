@@ -29,13 +29,13 @@ class SolitaireContainer extends React.Component {
         this.selectCardFromDrawPile = this.selectCardFromDrawPile.bind(this)
     }
 
-    handleCardClick(position, columnNumber = null) {
+    handleCardClick(position, columnNumber = null, index = null) {
         if (position === "drawPile"){
             this.drawCard()  
         } else if (position === "drawn"){
             this.selectCardFromDrawPile()
         } else if (position === "inPlay"){
-            this.selectCardFromInPlay(columnNumber)
+            this.selectCardFromInPlay(columnNumber, index)
         } else {
 
         }
@@ -56,38 +56,35 @@ class SolitaireContainer extends React.Component {
         this.setState({cards: newAllCards})
     }
 
-    selectCardFromInPlay(columnNumber){
+    selectCardFromInPlay(columnNumber, index){
         let newCards = this.state.cards
-        let clickedCard = this.state.cards.inPlay[columnNumber][this.state.cards.inPlay[columnNumber].length - 1]
-        //if selected card DONE
-            // if clicked card is one higher than selected card AND opposite colour DONE
-                //place card in that array DONE
-            // else if selected card is same as clicked card
-                //deselect card
-            // else
-                //do nothing
-        // else
-            //select card
+        let clickedCard = this.state.cards.inPlay[columnNumber][index]
+   
         if (this.state.selectedCard) {
-            if (this.state.selectedCard === this.state.cards.inPlay[columnNumber][this.state.cards.inPlay[columnNumber].length - 1]){
+            if (this.state.selectedCard === this.state.cards.inPlay[columnNumber][index]){
                 this.setState({selectedCard: null})
-                newCards.inPlay[columnNumber][newCards.inPlay[columnNumber].length - 1].hilighted = false
+                newCards.inPlay[columnNumber][index].hilighted = false
             } else if (this.state.selectedCard.value == clickedCard.value - 1 && this.state.selectedCard.colour != clickedCard.colour){
-                newCards.inPlay[columnNumber].push(this.state.selectedCard)
-                newCards.inPlay[columnNumber][newCards.inPlay[columnNumber].length - 1].hidden = false
-                newCards.inPlay[columnNumber][newCards.inPlay[columnNumber].length - 1].hilighted = false
                 if (this.state.selectedCard.position === "drawPile"){
+                    newCards.inPlay[columnNumber].push(this.state.selectedCard)
                     newCards.drawPile.drawn.pop()
                 } else if (this.state.selectedCard.position === "inPlay"){
+                    for(let i = this.state.selectedCard.index; i < newCards.inPlay[this.state.selectedCard.column].length; i++){
+                        newCards.inPlay[columnNumber].push(newCards.inPlay[this.state.selectedCard.column][i])
+                    }
                     newCards.inPlay[this.state.selectedCard.column].pop()
                 }
+                newCards.inPlay[columnNumber].forEach(card => {
+                    card.hilighted = false
+                })
                 this.setState({selectedCard: null})
             }
         } else {
-            newCards.inPlay[columnNumber][newCards.inPlay[columnNumber].length - 1].hilighted = true
-            let selectedCard = newCards.inPlay[columnNumber][newCards.inPlay[columnNumber].length - 1]
+            newCards.inPlay[columnNumber][index].hilighted = true
+            let selectedCard = newCards.inPlay[columnNumber][index]
             selectedCard.position = "inPlay"
             selectedCard.column = columnNumber
+            selectedCard.index = index
             this.setState({ selectedCard: selectedCard})
         }
         this.setState({cards: newCards})
@@ -100,6 +97,7 @@ class SolitaireContainer extends React.Component {
             newCards.drawPile.drawn = []
         } else {
             newCards.drawPile.drawn.push(newCards.drawPile.toDraw.pop())
+            newCards.drawPile.drawn[newCards.drawPile.drawn.length - 1].hidden = false
         }
         this.setState({cards: newCards})
     }
