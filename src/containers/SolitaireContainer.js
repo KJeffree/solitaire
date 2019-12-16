@@ -72,7 +72,13 @@ class SolitaireContainer extends React.Component {
                     for(let i = this.state.selectedCard.index; i < newCards.inPlay[this.state.selectedCard.column].length; i++){
                         newCards.inPlay[columnNumber].push(newCards.inPlay[this.state.selectedCard.column][i])
                     }
-                    newCards.inPlay[this.state.selectedCard.column].pop()
+                    let counter = 0;
+                    console.log(newCards.inPlay[this.state.selectedCard.column].length - parseInt(this.state.selectedCard.index))
+                    while (counter < newCards.inPlay[this.state.selectedCard.column].length - parseInt(this.state.selectedCard.index)){
+                        newCards.inPlay[this.state.selectedCard.column].pop()
+                        counter++
+                    }
+                    
                 }
                 newCards.inPlay[columnNumber].forEach(card => {
                     card.hilighted = false
