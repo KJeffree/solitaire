@@ -22,6 +22,10 @@ code {
   left: 0;
 }
 
+.hilighted {
+  border: 1px solid red;
+}
+
 .card-container {
   display: flex;
   justify-content: center;

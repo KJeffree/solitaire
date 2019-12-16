@@ -19,20 +19,21 @@ class SolitaireContainer extends React.Component {
                 ace: {
                     "HEARTS": [], "DIAMONDS": [], "SPADES": [], "CLUBS": []
                 }
-            }
+            },
+            selectedCard: null
 
         }
         this.dealCards = this.dealCards.bind(this)
         this.drawCard = this.drawCard.bind(this)
         this.handleCardClick = this.handleCardClick.bind(this)
-        this.playCardFromDrawPile = this.playCardFromDrawPile.bind(this)
+        this.selectCardFromDrawPile = this.selectCardFromDrawPile.bind(this)
     }
 
     handleCardClick(position) {
         if (position === "drawPile"){
             this.drawCard()  
         } else if (position === "drawn"){
-            this.playCardFromDrawPile()
+            this.selectCardFromDrawPile()
         } else if (position === "inPlay"){
 
         } else {
@@ -40,8 +41,23 @@ class SolitaireContainer extends React.Component {
         }
     }
 
-    playCardFromDrawPile(){
-        
+    selectCardFromDrawPile(){
+        let newAllCards = this.state.cards
+        const selectedCard = newAllCards.drawPile.drawn[newAllCards.drawPile.drawn.length - 1]
+        if (selectedCard === this.state.selectedCard){
+            console.log(true);
+            this.setState({selectedCard: null})
+            newAllCards.drawPile.drawn[newAllCards.drawPile.drawn.length - 1].hilighted = false
+            this.setState({ cards: newAllCards})
+        } else {
+            console.log(false);
+            newAllCards.drawPile.drawn[newAllCards.drawPile.drawn.length - 1].hilighted = true
+            this.setState({ selectedCard: this.state.cards.drawPile.drawn[this.state.cards.drawPile.drawn.length - 1]})
+        }
+    }
+
+    selectCardFromInPlay(){
+        // this.setState({ selectedCard: this.state.cards.inPlay[this.state.cards.inPlay.length - 1]})
     }
 
     drawCard() {
@@ -61,6 +77,7 @@ class SolitaireContainer extends React.Component {
 
         for (let card of newAllCards){
             card["hidden"] = true
+            card["hilighted"] = false
             if (card.value === "JACK"){
                 card.value = "11"
             } else if (card.value === "QUEEN"){
