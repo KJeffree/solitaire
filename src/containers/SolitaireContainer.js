@@ -60,10 +60,28 @@ class SolitaireContainer extends React.Component {
         let newCards = this.state.cards
         let clickedCard = this.state.cards.inPlay[columnNumber][index]
 
-        if (newCards.inPlay[columnNumber][index].hidden){
+        if (!this.state.selectedCard && newCards.inPlay[columnNumber][index].hidden){
             newCards.inPlay[columnNumber][index].hidden = false
         } else if (this.state.selectedCard) {
-            if (this.state.selectedCard === this.state.cards.inPlay[columnNumber][index]){
+            if (newCards.inPlay[columnNumber].length === 0 && this.state.selectedCard.value === "13"){
+                if (this.state.selectedCard.position === "drawPile"){
+                    newCards.inPlay[columnNumber].push(this.state.selectedCard)
+                    newCards.drawPile.drawn.pop()
+                } else if (this.state.selectedCard.position === "inPlay"){
+                    for(let i = this.state.selectedCard.index; i < newCards.inPlay[this.state.selectedCard.column].length; i++){
+                        newCards.inPlay[columnNumber].push(newCards.inPlay[this.state.selectedCard.column][i])
+                    }
+                    let difference = newCards.inPlay[this.state.selectedCard.column].length - this.state.selectedCard.index
+                    newCards.inPlay[this.state.selectedCard.column].splice(this.state.selectedCard.index, difference)
+                }
+                newCards.inPlay[columnNumber].forEach(card => {
+                    card.hilighted = false
+                })
+                this.setState({selectedCard: null})
+            } else if (newCards.inPlay[columnNumber].length === 0){
+                return
+            }
+            else if (this.state.selectedCard === newCards.inPlay[columnNumber][index]){
                 this.setState({selectedCard: null})
                 newCards.inPlay[columnNumber][index].hilighted = false
             } else if (this.state.selectedCard.value == clickedCard.value - 1 && this.state.selectedCard.colour != clickedCard.colour){
