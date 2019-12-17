@@ -72,12 +72,16 @@ class SolitaireContainer extends React.Component {
                     for(let i = this.state.selectedCard.index; i < newCards.inPlay[this.state.selectedCard.column].length; i++){
                         newCards.inPlay[columnNumber].push(newCards.inPlay[this.state.selectedCard.column][i])
                     }
-                    let counter = 0;
-                    console.log(newCards.inPlay[this.state.selectedCard.column].length - parseInt(this.state.selectedCard.index))
-                    while (counter < newCards.inPlay[this.state.selectedCard.column].length - parseInt(this.state.selectedCard.index)){
-                        newCards.inPlay[this.state.selectedCard.column].pop()
-                        counter++
-                    }
+                    let difference = newCards.inPlay[this.state.selectedCard.column].length - this.state.selectedCard.index
+                    newCards.inPlay[this.state.selectedCard.column].splice(this.state.selectedCard.index, difference)
+
+                    // let counter = 0;
+                    // console.log(newCards.inPlay[this.state.selectedCard.column].length - parseInt(this.state.selectedCard.index))
+
+                    // while (counter < newCards.inPlay[this.state.selectedCard.column].length - parseInt(this.state.selectedCard.index)){
+                    //     newCards.inPlay[this.state.selectedCard.column].pop()
+                    //     counter++
+                    // }
                     
                 }
                 newCards.inPlay[columnNumber].forEach(card => {
@@ -99,7 +103,7 @@ class SolitaireContainer extends React.Component {
     drawCard() {
         let newCards = this.state.cards
         if (newCards.drawPile.toDraw.length === 0){
-            newCards.drawPile.toDraw = newCards.drawPile.drawn
+            newCards.drawPile.toDraw = newCards.drawPile.drawn.reverse()
             newCards.drawPile.drawn = []
         } else {
             newCards.drawPile.drawn.push(newCards.drawPile.toDraw.pop())
