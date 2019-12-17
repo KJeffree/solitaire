@@ -27,88 +27,108 @@ class SolitaireContainer extends React.Component {
         this.drawCard = this.drawCard.bind(this)
         this.handleCardClick = this.handleCardClick.bind(this)
         this.selectCardFromDrawPile = this.selectCardFromDrawPile.bind(this)
+        this.moveCards = this.moveCards.bind(this)
     }
 
-    handleCardClick(position, columnNumber = null, index = null) {
+    handleCardClick(position, columnName = null, index = null) {
         if (position === "drawPile"){
             this.drawCard()  
         } else if (position === "drawn"){
             this.selectCardFromDrawPile()
         } else if (position === "inPlay"){
-            this.selectCardFromInPlay(columnNumber, index)
+            this.selectCardFromInPlay(columnName, index)
         } else {
-
+            this.selectCardFromAcePile(columnName)
         }
+    }
+
+    selectCardFromAcePile(name){
+        let newCards = this.state.cards
+        const clickedCard = newCards.ace[name]
+        if (clickedCard === this.state.selectedCard){
+            this.setState({selectedCard: null})
+            newCards.ace[newCards.ace.length - 1].hilighted = false
+        } else if (this.state.selectedCard === null) {
+            newCards.ace[newCards.ace.length - 1].hilighted = true
+            clickedCard.position = "ace"
+            clickedCard.column = name
+        } else {
+            if (name === this.state.selectedCard.suit && this.state.selectedCard.value === "1" && newCards.ace[name].length === 0){
+                if (this.state.selectedCard.position === "drawPile"){
+                    newCards.ace[name].push(this.state.selectedCard)
+                    newCards.drawPile.drawn.pop()
+                } else if (this.state.selectedCard.position === "inPlay"){
+                    newCards.ace[name].push(this.state.selectedCard)
+                    newCards.inPlay[this.state.selectedCard.column].pop()
+                }
+                newCards.ace[name].forEach(card => {
+                    card.hilighted = false
+                })
+            }
+        }
+        this.setState({selectedCard: null})
+
     }
 
     selectCardFromDrawPile(){
-        let newAllCards = this.state.cards
-        const selectedCard = newAllCards.drawPile.drawn[newAllCards.drawPile.drawn.length - 1]
-        if (selectedCard === this.state.selectedCard){
+        let newCards = this.state.cards
+        const clickedCard = newCards.drawPile.drawn[newCards.drawPile.drawn.length - 1]
+        if (clickedCard === this.state.selectedCard){
             this.setState({selectedCard: null})
-            newAllCards.drawPile.drawn[newAllCards.drawPile.drawn.length - 1].hilighted = false
+            newCards.drawPile.drawn[newCards.drawPile.drawn.length - 1].hilighted = false
         } else {
-            newAllCards.drawPile.drawn[newAllCards.drawPile.drawn.length - 1].hilighted = true
-            let selectedCard = this.state.cards.drawPile.drawn[this.state.cards.drawPile.drawn.length - 1]
-            selectedCard.position = "drawPile"
-            this.setState({ selectedCard: selectedCard})
+            newCards.drawPile.drawn[newCards.drawPile.drawn.length - 1].hilighted = true
+            clickedCard.position = "drawPile"
+            this.setState({ selectedCard: clickedCard})
         }
-        this.setState({cards: newAllCards})
+        this.setState({cards: newCards})
     }
 
-    selectCardFromInPlay(columnNumber, index){
+    selectCardFromInPlay(columnName, index){
         let newCards = this.state.cards
-        let clickedCard = this.state.cards.inPlay[columnNumber][index]
+        let clickedCard = this.state.cards.inPlay[columnName][index]
 
-        if (!this.state.selectedCard && newCards.inPlay[columnNumber][index].hidden){
-            newCards.inPlay[columnNumber][index].hidden = false
+        if (!this.state.selectedCard && newCards.inPlay[columnName][index].hidden){
+            newCards.inPlay[columnName][index].hidden = false
         } else if (this.state.selectedCard) {
-            if (newCards.inPlay[columnNumber].length === 0 && this.state.selectedCard.value === "13"){
-                if (this.state.selectedCard.position === "drawPile"){
-                    newCards.inPlay[columnNumber].push(this.state.selectedCard)
-                    newCards.drawPile.drawn.pop()
-                } else if (this.state.selectedCard.position === "inPlay"){
-                    for(let i = this.state.selectedCard.index; i < newCards.inPlay[this.state.selectedCard.column].length; i++){
-                        newCards.inPlay[columnNumber].push(newCards.inPlay[this.state.selectedCard.column][i])
-                    }
-                    let difference = newCards.inPlay[this.state.selectedCard.column].length - this.state.selectedCard.index
-                    newCards.inPlay[this.state.selectedCard.column].splice(this.state.selectedCard.index, difference)
-                }
-                newCards.inPlay[columnNumber].forEach(card => {
-                    card.hilighted = false
-                })
-                this.setState({selectedCard: null})
-            } else if (newCards.inPlay[columnNumber].length === 0){
+            if (newCards.inPlay[columnName].length === 0 && this.state.selectedCard.value === "13"){
+                this.moveCards(columnName)
+            } else if (newCards.inPlay[columnName].length === 0){
                 return
             }
-            else if (this.state.selectedCard === newCards.inPlay[columnNumber][index]){
+            else if (this.state.selectedCard === newCards.inPlay[columnName][index]){
                 this.setState({selectedCard: null})
-                newCards.inPlay[columnNumber][index].hilighted = false
+                newCards.inPlay[columnName][index].hilighted = false
             } else if (this.state.selectedCard.value == clickedCard.value - 1 && this.state.selectedCard.colour != clickedCard.colour){
-                if (this.state.selectedCard.position === "drawPile"){
-                    newCards.inPlay[columnNumber].push(this.state.selectedCard)
-                    newCards.drawPile.drawn.pop()
-                } else if (this.state.selectedCard.position === "inPlay"){
-                    for(let i = this.state.selectedCard.index; i < newCards.inPlay[this.state.selectedCard.column].length; i++){
-                        newCards.inPlay[columnNumber].push(newCards.inPlay[this.state.selectedCard.column][i])
-                    }
-                    let difference = newCards.inPlay[this.state.selectedCard.column].length - this.state.selectedCard.index
-                    newCards.inPlay[this.state.selectedCard.column].splice(this.state.selectedCard.index, difference)
-                }
-                newCards.inPlay[columnNumber].forEach(card => {
-                    card.hilighted = false
-                })
-                this.setState({selectedCard: null})
+                this.moveCards(columnName)
             }
         } else {
-            newCards.inPlay[columnNumber][index].hilighted = true
-            let selectedCard = newCards.inPlay[columnNumber][index]
+            newCards.inPlay[columnName][index].hilighted = true
+            let selectedCard = newCards.inPlay[columnName][index]
             selectedCard.position = "inPlay"
-            selectedCard.column = columnNumber
+            selectedCard.column = columnName
             selectedCard.index = index
             this.setState({ selectedCard: selectedCard})
         }
         this.setState({cards: newCards})
+    }
+
+    moveCards(columnName){
+        let newCards = this.state.cards
+        if (this.state.selectedCard.position === "drawPile"){
+            newCards.inPlay[columnName].push(this.state.selectedCard)
+            newCards.drawPile.drawn.pop()
+        } else if (this.state.selectedCard.position === "inPlay"){
+            for(let i = this.state.selectedCard.index; i < newCards.inPlay[this.state.selectedCard.column].length; i++){
+                newCards.inPlay[columnName].push(newCards.inPlay[this.state.selectedCard.column][i])
+            }
+            let difference = newCards.inPlay[this.state.selectedCard.column].length - this.state.selectedCard.index
+            newCards.inPlay[this.state.selectedCard.column].splice(this.state.selectedCard.index, difference)
+        }
+        newCards.inPlay[columnName].forEach(card => {
+            card.hilighted = false
+        })
+        this.setState({selectedCard: null})
     }
 
     drawCard() {
