@@ -59,8 +59,10 @@ class SolitaireContainer extends React.Component {
     selectCardFromInPlay(columnNumber, index){
         let newCards = this.state.cards
         let clickedCard = this.state.cards.inPlay[columnNumber][index]
-   
-        if (this.state.selectedCard) {
+
+        if (newCards.inPlay[columnNumber][index].hidden){
+            newCards.inPlay[columnNumber][index].hidden = false
+        } else if (this.state.selectedCard) {
             if (this.state.selectedCard === this.state.cards.inPlay[columnNumber][index]){
                 this.setState({selectedCard: null})
                 newCards.inPlay[columnNumber][index].hilighted = false
@@ -74,15 +76,6 @@ class SolitaireContainer extends React.Component {
                     }
                     let difference = newCards.inPlay[this.state.selectedCard.column].length - this.state.selectedCard.index
                     newCards.inPlay[this.state.selectedCard.column].splice(this.state.selectedCard.index, difference)
-
-                    // let counter = 0;
-                    // console.log(newCards.inPlay[this.state.selectedCard.column].length - parseInt(this.state.selectedCard.index))
-
-                    // while (counter < newCards.inPlay[this.state.selectedCard.column].length - parseInt(this.state.selectedCard.index)){
-                    //     newCards.inPlay[this.state.selectedCard.column].pop()
-                    //     counter++
-                    // }
-                    
                 }
                 newCards.inPlay[columnNumber].forEach(card => {
                     card.hilighted = false
