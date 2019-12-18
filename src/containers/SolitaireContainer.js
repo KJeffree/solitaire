@@ -48,7 +48,9 @@ class SolitaireContainer extends React.Component {
         if (clickedCard === this.state.selectedCard){
             this.setState({selectedCard: null})
             newCards.ace[newCards.ace.length - 1].hilighted = false
-        } else if (this.state.selectedCard === null) {
+        } else if (this.state.selectedCard === null && newCards.ace[name].length === 0){
+            return
+        }else if (this.state.selectedCard === null) {
             newCards.ace[newCards.ace.length - 1].hilighted = true
             clickedCard.position = "ace"
             clickedCard.column = name
@@ -64,7 +66,8 @@ class SolitaireContainer extends React.Component {
                 newCards.ace[name].forEach(card => {
                     card.hilighted = false
                 })
-            } else if (name === this.state.selectedCard.suit && newCards.ace[name][newCards.ace[name].length - 1].value + 1 === this.state.selectedCard.value){
+                this.setState({selectedCard: null})
+            } else if (name === this.state.selectedCard.suit && parseInt(newCards.ace[name][newCards.ace[name].length - 1].value) + 1 == this.state.selectedCard.value){
                 if (this.state.selectedCard.position === "drawPile"){
                     newCards.ace[name].push(this.state.selectedCard)
                     newCards.drawPile.drawn.pop()
@@ -75,9 +78,11 @@ class SolitaireContainer extends React.Component {
                 newCards.ace[name].forEach(card => {
                     card.hilighted = false
                 })
+                this.setState({selectedCard: null})
             }
+            
         }
-        this.setState({selectedCard: null})
+        this.setState({cards: newCards})
 
     }
 
@@ -87,6 +92,8 @@ class SolitaireContainer extends React.Component {
         if (clickedCard === this.state.selectedCard){
             this.setState({selectedCard: null})
             newCards.drawPile.drawn[newCards.drawPile.drawn.length - 1].hilighted = false
+        } else if (this.state.selectedCard === null && newCards.drawPile.drawn.length === 0){
+            return
         } else {
             newCards.drawPile.drawn[newCards.drawPile.drawn.length - 1].hilighted = true
             clickedCard.position = "drawPile"
@@ -98,8 +105,12 @@ class SolitaireContainer extends React.Component {
     selectCardFromInPlay(columnName, index){
         let newCards = this.state.cards
         let clickedCard = this.state.cards.inPlay[columnName][index]
-
-        if (!this.state.selectedCard && newCards.inPlay[columnName][index].hidden){
+        if (this.state.selectedCard && this.state.selectedCard.column === columnName && this.state.selectedCard != clickedCard){
+            return
+        }
+        if (this.state.selectedCard === null && newCards.inPlay[columnName].length === 0){
+            return
+        } else if (!this.state.selectedCard && newCards.inPlay[columnName][index].hidden){
             newCards.inPlay[columnName][index].hidden = false
         } else if (this.state.selectedCard) {
             if (newCards.inPlay[columnName].length === 0 && this.state.selectedCard.value === "13"){
