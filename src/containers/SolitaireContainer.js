@@ -47,13 +47,14 @@ class SolitaireContainer extends React.Component {
         const clickedCard = newCards.ace[name]
         if (clickedCard === this.state.selectedCard){
             this.setState({selectedCard: null})
-            newCards.ace[newCards.ace.length - 1].hilighted = false
+            newCards.ace[name][newCards.ace[name].length - 1].hilighted = false
         } else if (this.state.selectedCard === null && newCards.ace[name].length === 0){
             return
-        }else if (this.state.selectedCard === null) {
-            newCards.ace[newCards.ace.length - 1].hilighted = true
+        } else if (this.state.selectedCard === null) {
+            newCards.ace[name][newCards.ace[name].length - 1].hilighted = true
             clickedCard.position = "ace"
             clickedCard.column = name
+            this.setState({selectedCard: clickedCard})
         } else {
             if (name === this.state.selectedCard.suit && this.state.selectedCard.value === "1" && newCards.ace[name].length === 0){
                 if (this.state.selectedCard.position === "drawPile"){
