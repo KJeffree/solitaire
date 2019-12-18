@@ -44,7 +44,7 @@ class SolitaireContainer extends React.Component {
 
     selectCardFromAcePile(name){
         let newCards = this.state.cards
-        const clickedCard = newCards.ace[name]
+        const clickedCard = newCards.ace[name][newCards.ace[name].length - 1]
         if (clickedCard === this.state.selectedCard){
             this.setState({selectedCard: null})
             newCards.ace[name][newCards.ace[name].length - 1].hilighted = false
@@ -69,9 +69,9 @@ class SolitaireContainer extends React.Component {
                 })
                 this.setState({selectedCard: null})
             } else if (name === this.state.selectedCard.suit && parseInt(newCards.ace[name][newCards.ace[name].length - 1].value) + 1 == this.state.selectedCard.value){
-                if (this.state.selectedCard.position === "drawPile"){
+                if (this.state.selectedCard.position === "drawPile" || this.state.selectedCard.position === "ace"){
                     newCards.ace[name].push(this.state.selectedCard)
-                    newCards.drawPile.drawn.pop()
+                    newCards[this.state.selectedCard.position].drawn.pop()
                 } else if (this.state.selectedCard.position === "inPlay"){
                     newCards.ace[name].push(this.state.selectedCard)
                     newCards.inPlay[this.state.selectedCard.column].pop()
@@ -114,6 +114,7 @@ class SolitaireContainer extends React.Component {
         } else if (!this.state.selectedCard && newCards.inPlay[columnName][index].hidden){
             newCards.inPlay[columnName][index].hidden = false
         } else if (this.state.selectedCard) {
+
             if (newCards.inPlay[columnName].length === 0 && this.state.selectedCard.value === "13"){
                 this.moveCards(columnName)
             } else if (newCards.inPlay[columnName].length === 0){
@@ -141,6 +142,9 @@ class SolitaireContainer extends React.Component {
         if (this.state.selectedCard.position === "drawPile"){
             newCards.inPlay[columnName].push(this.state.selectedCard)
             newCards.drawPile.drawn.pop()
+        } else if (this.state.selectedCard.position === "ace") {
+            newCards.inPlay[columnName].push(this.state.selectedCard)
+            newCards.ace[this.state.selectedCard.column].pop()
         } else if (this.state.selectedCard.position === "inPlay"){
             for(let i = this.state.selectedCard.index; i < newCards.inPlay[this.state.selectedCard.column].length; i++){
                 newCards.inPlay[columnName].push(newCards.inPlay[this.state.selectedCard.column][i])
