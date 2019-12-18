@@ -64,6 +64,17 @@ class SolitaireContainer extends React.Component {
                 newCards.ace[name].forEach(card => {
                     card.hilighted = false
                 })
+            } else if (name === this.state.selectedCard.suit && newCards.ace[name][newCards.ace[name].length - 1].value + 1 === this.state.selectedCard.value){
+                if (this.state.selectedCard.position === "drawPile"){
+                    newCards.ace[name].push(this.state.selectedCard)
+                    newCards.drawPile.drawn.pop()
+                } else if (this.state.selectedCard.position === "inPlay"){
+                    newCards.ace[name].push(this.state.selectedCard)
+                    newCards.inPlay[this.state.selectedCard.column].pop()
+                }
+                newCards.ace[name].forEach(card => {
+                    card.hilighted = false
+                })
             }
         }
         this.setState({selectedCard: null})
