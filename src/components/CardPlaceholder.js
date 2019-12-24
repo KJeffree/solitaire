@@ -11,6 +11,13 @@ const CardPlaceholder = (props) => {
         }
     } 
     
+    if (props.cards.length === 0 && props.position === "ace"){
+        return (
+            <div className="card-placeholder" onClick={handleClick}>
+                <img src={props.column + ".png"} className="aceImage"></img>
+            </div>
+        )
+    }
     if (props.cards.length === 0){
         return (
             <div className="card-placeholder" onClick={handleClick}>

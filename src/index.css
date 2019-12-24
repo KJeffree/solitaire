@@ -12,6 +12,12 @@ code {
     monospace;
 }
 
+.aceImage {
+  width: 30px;
+  height: 30px;
+  margin: auto;
+}
+
 .card-placeholder {
   border: 1px solid black;
   height: 138px;
@@ -20,6 +26,7 @@ code {
   position: relative;
   top: 0;
   left: 0;
+  display: flex;
 }
 
 .hilighted {

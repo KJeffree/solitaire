@@ -21,7 +21,6 @@ class SolitaireContainer extends React.Component {
                 }
             },
             selectedCard: null
-
         }
         this.dealCards = this.dealCards.bind(this)
         this.drawCard = this.drawCard.bind(this)
@@ -88,7 +87,7 @@ class SolitaireContainer extends React.Component {
         }
         if (this.state.selectedCard === null && newCards.inPlay[columnName].length === 0){
             return
-        } else if (!this.state.selectedCard && newCards.inPlay[columnName][index].hidden && newCards.inPlay[columnName].length === index){
+        } else if (!this.state.selectedCard && newCards.inPlay[columnName][index].hidden && newCards.inPlay[columnName].length - 1 === index){
             newCards.inPlay[columnName][index].hidden = false
         } else if (this.state.selectedCard && this.state.selectedCard.hidden === false) {
 
