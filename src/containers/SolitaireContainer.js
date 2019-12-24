@@ -28,6 +28,7 @@ class SolitaireContainer extends React.Component {
         this.handleCardClick = this.handleCardClick.bind(this)
         this.selectCardFromDrawPile = this.selectCardFromDrawPile.bind(this)
         this.moveCards = this.moveCards.bind(this)
+        this.selectCard = this.selectCard.bind(this)
     }
 
     handleCardClick(position, columnName = null, index = null) {
@@ -57,14 +58,7 @@ class SolitaireContainer extends React.Component {
             } else if (this.state.selectedCard && name === this.state.selectedCard.suit && parseInt(newCards.ace[name][newCards.ace[name].length - 1].value) + 1 == this.state.selectedCard.value){
                 this.moveCards(name, "ace")
             } else {
-                if (this.state.selectedCard) {
-                    newCards[this.state.selectedCard.position][this.state.selectedCard.column][this.state.selectedCard.index].hilighted = false
-                }
-                newCards.ace[name][newCards.ace[name].length - 1].hilighted = true
-                clickedCard.position = "ace"
-                clickedCard.column = name
-                clickedCard.index = newCards.ace[name].length - 1
-                this.setState({selectedCard: clickedCard})
+                this.selectCard("ace", name, newCards.ace[name].length - 1)
             }
             
         }
@@ -81,14 +75,7 @@ class SolitaireContainer extends React.Component {
         } else if (this.state.selectedCard === null && newCards.drawPile.drawn.length === 0){
             return
         } else {
-            if (this.state.selectedCard) {
-                newCards[this.state.selectedCard.position][this.state.selectedCard.column][this.state.selectedCard.index].hilighted = false
-            }
-            newCards.drawPile.drawn[newCards.drawPile.drawn.length - 1].hilighted = true
-            clickedCard.position = "drawPile"
-            clickedCard.column = "drawn"
-            clickedCard.index = newCards.drawPile.drawn.length - 1
-            this.setState({ selectedCard: clickedCard})
+            this.selectCard("drawPile", "drawn", newCards.drawPile.drawn.length - 1)
         }
         this.setState({cards: newCards})
     }
@@ -101,10 +88,9 @@ class SolitaireContainer extends React.Component {
         }
         if (this.state.selectedCard === null && newCards.inPlay[columnName].length === 0){
             return
-        } else if (!this.state.selectedCard && newCards.inPlay[columnName][index].hidden){
-
+        } else if (!this.state.selectedCard && newCards.inPlay[columnName][index].hidden && newCards.inPlay[columnName].length === index){
             newCards.inPlay[columnName][index].hidden = false
-        } else if (this.state.selectedCard) {
+        } else if (this.state.selectedCard && this.state.selectedCard.hidden === false) {
 
             if (newCards.inPlay[columnName].length === 0 && this.state.selectedCard.value === "13"){
 
@@ -121,28 +107,25 @@ class SolitaireContainer extends React.Component {
 
                 this.moveCards(columnName, "inPlay")
             } else {
-                if (this.state.selectedCard) {
-                    newCards[this.state.selectedCard.position][this.state.selectedCard.column][this.state.selectedCard.index].hilighted = false
-                }
-                newCards.inPlay[columnName][index].hilighted = true
-                let selectedCard = newCards.inPlay[columnName][index]
-                selectedCard.position = "inPlay"
-                selectedCard.column = columnName
-                selectedCard.index = index
-                this.setState({ selectedCard: selectedCard})
+                this.selectCard("inPlay", columnName, index)
             } 
         } else {
-            if (this.state.selectedCard) {
-                newCards[this.state.selectedCard.position][this.state.selectedCard.column][this.state.selectedCard.index].hilighted = false
-            }
-            newCards.inPlay[columnName][index].hilighted = true
-            let selectedCard = newCards.inPlay[columnName][index]
-            selectedCard.position = "inPlay"
-            selectedCard.column = columnName
-            selectedCard.index = index
-            this.setState({ selectedCard: selectedCard})
+            this.selectCard("inPlay", columnName, index)
         } 
         this.setState({cards: newCards})
+    }
+
+    selectCard(position, column, index){
+        let newCards = this.state.cards
+        if (this.state.selectedCard) {
+            newCards[this.state.selectedCard.position][this.state.selectedCard.column][this.state.selectedCard.index].hilighted = false
+        }
+        newCards[position][column][index].hilighted = true
+        let selectedCard = newCards[position][column][index]
+        selectedCard.position = position
+        selectedCard.column = column
+        selectedCard.index = index
+        this.setState({ selectedCard: selectedCard})
     }
 
     moveCards(columnName, position){
