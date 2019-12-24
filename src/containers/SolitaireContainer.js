@@ -69,8 +69,18 @@ class SolitaireContainer extends React.Component {
         let newCards = this.state.cards
         const clickedCard = newCards.drawPile.drawn[newCards.drawPile.drawn.length - 1]
         if (clickedCard === this.state.selectedCard){
-            this.setState({selectedCard: null})
             newCards.drawPile.drawn[newCards.drawPile.drawn.length - 1].hilighted = false
+            if (newCards.ace[this.state.selectedCard.suit].length > 0){
+                if (newCards.ace[this.state.selectedCard.suit][newCards.ace[this.state.selectedCard.suit].length - 1].value == this.state.selectedCard.value - 1){
+                    this.moveCards(this.state.selectedCard.suit, "ace")
+                }
+            } else if (this.state.selectedCard.value === "1") {
+                newCards.drawPile.drawn[newCards.drawPile.drawn.length - 1].hilighted = false
+                this.moveCards(this.state.selectedCard.suit, "ace")
+            }
+
+            this.setState({selectCard: null})
+
         } else if (this.state.selectedCard === null && newCards.drawPile.drawn.length === 0){
             return
         } else {
@@ -101,9 +111,16 @@ class SolitaireContainer extends React.Component {
                 return
             }
             else if (this.state.selectedCard === newCards.inPlay[columnName][index]){
-
-                this.setState({selectedCard: null})
                 newCards.inPlay[columnName][index].hilighted = false
+                if (newCards.ace[this.state.selectedCard.suit].length > 0){
+                    if (newCards.ace[this.state.selectedCard.suit][newCards.ace[this.state.selectedCard.suit].length - 1].value == this.state.selectedCard.value - 1){
+                    this.moveCards(this.state.selectedCard.suit, "ace")
+                    }
+                } else if (this.state.selectedCard.value === "1") {
+                    newCards.inPlay[columnName][index].hilighted = false
+                    this.moveCards(this.state.selectedCard.suit, "ace")
+                }
+                this.setState({selectedCard: null})
             } else if (this.state.selectedCard.value == clickedCard.value - 1 && this.state.selectedCard.colour != clickedCard.colour){
 
                 this.moveCards(columnName, "inPlay")
