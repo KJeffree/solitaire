@@ -89,6 +89,8 @@ class SolitaireContainer extends React.Component {
             return
         } else if (!this.state.selectedCard && newCards.inPlay[columnName][index].hidden && newCards.inPlay[columnName].length - 1 === index){
             newCards.inPlay[columnName][index].hidden = false
+        } else if (!this.state.selectedCard && newCards.inPlay[columnName][index].hidden){
+            return
         } else if (this.state.selectedCard && this.state.selectedCard.hidden === false) {
 
             if (newCards.inPlay[columnName].length === 0 && this.state.selectedCard.value === "13"){

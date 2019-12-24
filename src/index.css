@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #336600;
 }
 
 code {
@@ -19,7 +20,7 @@ code {
 }
 
 .card-placeholder {
-  border: 1px solid black;
+  border: 3px inset green;
   height: 138px;
   width: 100px;
   margin: 10px;
@@ -30,7 +31,7 @@ code {
 }
 
 .hilighted {
-  border: 1px solid red;
+  border: 2px solid red;
 }
 
 .card-container {
