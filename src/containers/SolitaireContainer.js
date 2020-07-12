@@ -138,12 +138,18 @@ class SolitaireContainer extends React.Component {
         if (this.state.selectedCard) {
             newCards[this.state.selectedCard.position][this.state.selectedCard.column][this.state.selectedCard.index].hilighted = false
         }
-        newCards[position][column][index].hilighted = true
-        let selectedCard = newCards[position][column][index]
-        selectedCard.position = position
-        selectedCard.column = column
-        selectedCard.index = index
-        this.setState({ selectedCard: selectedCard})
+        if (newCards[position][column][index]){
+            newCards[position][column][index].hilighted = true
+            let selectedCard = newCards[position][column][index]
+            selectedCard.position = position
+            selectedCard.column = column
+            selectedCard.index = index
+            this.setState({ selectedCard: selectedCard})
+
+        } else {
+            this.setState({selectedCard: null})
+        }
+        
     }
 
     moveCards(columnName, position){
