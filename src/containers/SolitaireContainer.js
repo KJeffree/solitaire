@@ -28,6 +28,8 @@ class SolitaireContainer extends React.Component {
         this.selectCardFromDrawPile = this.selectCardFromDrawPile.bind(this)
         this.moveCards = this.moveCards.bind(this)
         this.selectCard = this.selectCard.bind(this)
+        this.fetchCards = this.fetchCards.bind(this)
+        this.resetState = this.resetState.bind(this)
     }
 
     handleCardClick(position, columnName = null, index = null) {
@@ -173,6 +175,15 @@ class SolitaireContainer extends React.Component {
         this.setState({selectedCard: null})
     }
 
+    shuffleCards(){
+        let newCards = this.state.allCards
+        for (let i = newCards.length - 1; i > 0; i--){
+            let previousCard = Math.floor(Math.random() * (i + 1));
+            [newCards[i], newCards[previousCard]] = [newCards[previousCard], newCards[i]]
+        }
+        this.setState({allCards: newCards})
+    }
+
     drawCard() {
         let newCards = this.state.cards
         if (newCards.drawPile.toDraw.length === 0){
@@ -190,6 +201,7 @@ class SolitaireContainer extends React.Component {
     }
 
     dealCards() {
+        this.shuffleCards();
         let newAllCards = this.state.allCards
         let newCards = this.state.cards
 
@@ -225,13 +237,45 @@ class SolitaireContainer extends React.Component {
         this.setState({cards: newCards})
     }
 
-    componentDidMount() {
+    // componentDidMount() {
+    //     const url = "https://deckofcardsapi.com/api/deck/new/draw/?count=52"
+
+    //     fetch(url)
+    //         .then(res => res.json())
+    //         .then(cards => this.setState({allCards: cards.cards}))
+    //         .catch(err => console.error)
+    // }
+
+    fetchCards(){
+        this.resetState()
         const url = "https://deckofcardsapi.com/api/deck/new/draw/?count=52"
 
         fetch(url)
             .then(res => res.json())
             .then(cards => this.setState({allCards: cards.cards}))
+            .then(result => {
+                this.dealCards()
+            })
             .catch(err => console.error)
+    }
+
+    resetState(){
+        this.setState({
+            allCards: [],
+            cards: {
+                drawPile: {
+                    toDraw: [],
+                    drawn: []
+                },
+                inPlay: {
+                    0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []
+                },
+                ace: {
+                    "HEARTS": [], "DIAMONDS": [], "SPADES": [], "CLUBS": []
+                }
+            },
+            selectedCard: null
+        })
     }
 
     render() {
@@ -242,7 +286,7 @@ class SolitaireContainer extends React.Component {
                     <AceCardContainer cards={this.state.cards.ace} onCardClick={this.handleCardClick}></AceCardContainer>
                 </div>
                 <CardPlayContainer cards={this.state.cards.inPlay} onCardClick={this.handleCardClick}></CardPlayContainer>
-                <button onClick={this.dealCards}>Start Game</button>
+                <button onClick={this.fetchCards}>Start Game</button>
             </div>
         )
     }
