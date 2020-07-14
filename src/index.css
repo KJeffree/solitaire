@@ -19,6 +19,16 @@ code {
   margin: auto;
 }
 
+.main-container{
+  display: flex;
+}
+
+#start-button{
+  height: 50px;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
 .card-placeholder {
   border: 3px inset green;
   height: 138px;

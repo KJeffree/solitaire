@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import DrawCardContainer from './DrawCardContainer';
 import AceCardContainer from './AceCardContainer';
 import CardPlayContainer from './CardPlayContainer';
@@ -280,13 +280,15 @@ class SolitaireContainer extends React.Component {
 
     render() {
         return (
+            <div className="main-container">
             <div className="game-container">
                 <div className="top-bar">
                     <DrawCardContainer cards={this.state.cards.drawPile} onCardClick={this.handleCardClick}></DrawCardContainer>
                     <AceCardContainer cards={this.state.cards.ace} onCardClick={this.handleCardClick}></AceCardContainer>
                 </div>
                 <CardPlayContainer cards={this.state.cards.inPlay} onCardClick={this.handleCardClick}></CardPlayContainer>
-                <button onClick={this.fetchCards}>Start Game</button>
+            </div>
+            <button id="start-button" onClick={this.fetchCards}>Start New Game</button>
             </div>
         )
     }
