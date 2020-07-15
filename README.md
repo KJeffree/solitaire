@@ -10,4 +10,5 @@ I found a [card api](https://deckofcardsapi.com) and decided that I wanted to tr
 - Cards display in a staggared appearance so you can see all cards below.
 - You can select and move a card that is not the top card, by selecting it and choosing where to move it.
 
+#### Play the game:
 To run the game, clone this repo, run `npm i` and then `npm start`. Go to http://localhost:3000 in your browser to view the app.
